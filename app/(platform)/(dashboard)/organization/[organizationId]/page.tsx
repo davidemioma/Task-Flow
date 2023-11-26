@@ -5,5 +5,5 @@ export default function OrganizationPage({
 }) {
   const { organizationId } = params;
 
-  return <div className="mt-20">OrganizationPage {organizationId}</div>;
+  return <div className="">OrganizationPage {organizationId}</div>;
 }
