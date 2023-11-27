@@ -1,9 +1,17 @@
-export default function OrganizationPage({
-  params,
-}: {
-  params: { organizationId: string };
-}) {
-  const { organizationId } = params;
+import { Info } from "./_components/Info";
+import { BoardList } from "./_components/BoardList";
+import { Separator } from "@/components/ui/separator";
 
-  return <div className="">OrganizationPage {organizationId}</div>;
+export default function OrganizationPage() {
+  return (
+    <div className="w-full mb-20">
+      <Info />
+
+      <Separator className="my-4" />
+
+      <div className="px-2 md:px-4">
+        <BoardList />
+      </div>
+    </div>
+  );
 }

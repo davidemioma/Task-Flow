@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+//npm i -D prisma
+//npx prisma init
+//npx prisma generate - Do this after creating a new model
+//npx prisma db push - to push to your database.
+//npx prisma migrate reset - to reset your databse.
+//npx prisma studio - to view your data
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Board{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  orgId String @unique
+  title String
+  // imageId String
+  // imageThumbUrl String @db.String
+  // imageFullUrl String @db.String
+  // imageUserName String @db.String
+  // imageLinkHTML String @db.String
+  // createdAt DateTime @default(now())
+  // updatedAt DateTime @updatedAt
+}
