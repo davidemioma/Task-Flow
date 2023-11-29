@@ -16,6 +16,21 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   const { title, image } = data;
 
+  const [imageId, imageThumbUrl, imageFullUrl, imageLinkHTML, imageUserName] =
+    image.split("|");
+
+  if (
+    !imageId ||
+    !imageThumbUrl ||
+    !imageFullUrl ||
+    !imageUserName ||
+    !imageLinkHTML
+  ) {
+    return {
+      error: "Missing fields. Failed to create board.",
+    };
+  }
+
   let board;
 
   try {
@@ -23,6 +38,11 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       data: {
         title,
         orgId,
+        imageId,
+        imageThumbUrl,
+        imageFullUrl,
+        imageUserName,
+        imageLinkHTML,
       },
     });
   } catch (err) {

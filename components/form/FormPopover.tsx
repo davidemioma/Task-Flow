@@ -5,7 +5,9 @@ import { toast } from "sonner";
 import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import FormSubmit from "./FormSubmit";
+import FormPicker from "./FormPicker";
 import { FormInput } from "./FormInput";
+import { useRouter } from "next/navigation";
 import { useAction } from "@/hooks/use-action";
 import { createBoard } from "@/actions/createBoard";
 import {
@@ -14,7 +16,6 @@ import {
   PopoverTrigger,
   PopoverClose,
 } from "@/components/ui/popover";
-import { useRouter } from "next/navigation";
 
 interface Props {
   children: React.ReactNode;
@@ -81,6 +82,8 @@ const FormPopover = ({
 
         <form className="space-y-4" action={onSubmit}>
           <div className="space-y-4">
+            <FormPicker id="image" errors={fieldErrors} />
+
             <FormInput
               type="text"
               id="title"
