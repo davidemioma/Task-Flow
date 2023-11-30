@@ -1,9 +1,12 @@
 "use client";
 
 import React, { ElementRef, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Plus, X } from "lucide-react";
 import ListWrapper from "./ListWrapper";
+import { useAction } from "@/hooks/use-action";
 import { Button } from "@/components/ui/button";
+import { createList } from "@/actions/createList";
 import FormSubmit from "@/components/form/FormSubmit";
 import { useParams, useRouter } from "next/navigation";
 import { FormInput } from "@/components/form/FormInput";
@@ -42,18 +45,44 @@ const ListForm = () => {
 
   useOnClickOutside(formRef, disableEditing);
 
+  const { execute, fieldErrors } = useAction(createList, {
+    onSuccess: (data) => {
+      toast.success(`List "${data.title}" created`);
+
+      disableEditing();
+
+      router.refresh();
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
+
+  const onSubmit = (formData: FormData) => {
+    const title = formData.get("title") as string;
+
+    const boardId = formData.get("boardId") as string;
+
+    execute({
+      title,
+      boardId,
+    });
+  };
+
   if (isEditing) {
     return (
       <ListWrapper>
         <form
           className="bg-white w-full p-3 space-y-4 rounded-md shadow-sm"
           ref={formRef}
+          action={onSubmit}
         >
           <FormInput
             className="h-7 px-2 py-1 text-sm font-medium border-transparent hover:border-input focus:border-input transition"
             ref={inputRef}
             id="title"
             placeholder="Enter list title..."
+            errors={fieldErrors}
           />
 
           <input hidden value={params.boardId} name="boardId" />
