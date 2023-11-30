@@ -17,20 +17,20 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   const { id } = data;
 
-  const exists = await prismadb.board.findUnique({
-    where: {
-      id,
-      orgId,
-    },
-  });
-
-  if (!exists) {
-    return { error: "Board does not exists" };
-  }
-
   let board;
 
   try {
+    const exists = await prismadb.board.findUnique({
+      where: {
+        id,
+        orgId,
+      },
+    });
+
+    if (!exists) {
+      return { error: "Board does not exists" };
+    }
+
     board = await prismadb.board.delete({
       where: {
         id,
