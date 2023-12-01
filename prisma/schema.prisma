@@ -50,7 +50,7 @@ model Card{
   listId String @db.ObjectId
   order Int
   title String
-  description String @db.String
+  description String? @db.String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

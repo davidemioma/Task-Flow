@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ElementRef, useRef, useState } from "react";
+import { CardForm } from "./CardForm";
 import ListHeader from "./ListHeader";
 import { List, Card } from "@prisma/client";
 
@@ -16,10 +17,32 @@ interface Props {
 const ListItem = ({ index, list }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
 
+  const textareaRef = useRef<ElementRef<"textarea">>(null);
+
+  const disableEditing = () => {
+    setIsEditing(false);
+  };
+
+  const enableEditing = () => {
+    setIsEditing(true);
+
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    });
+  };
+
   return (
     <li className="h-full w-[272px] shrink-0 select-none">
       <div className="bg-[#f1f2f4] w-full pb-2 rounded-md shadow-md">
-        <ListHeader list={list} onAddCard={() => {}} />
+        <ListHeader list={list} onAddCard={enableEditing} />
+
+        <CardForm
+          listId={list.id}
+          ref={textareaRef}
+          isEditing={isEditing}
+          enableEditing={enableEditing}
+          disableEditing={disableEditing}
+        />
       </div>
     </li>
   );
