@@ -3,6 +3,7 @@
 import React from "react";
 import { Card } from "@prisma/client";
 import { Draggable } from "@hello-pangea/dnd";
+import useCardModel from "@/hooks/use-card-model";
 
 interface Props {
   card: Card;
@@ -10,6 +11,8 @@ interface Props {
 }
 
 const CardItem = ({ card, index }: Props) => {
+  const cardModal = useCardModel();
+
   return (
     <Draggable draggableId={card.id} index={index}>
       {(provided) => (
@@ -19,7 +22,7 @@ const CardItem = ({ card, index }: Props) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          onClick={() => {}}
+          onClick={() => cardModal.onOpen(card.id)}
         >
           {card.title}
         </div>
