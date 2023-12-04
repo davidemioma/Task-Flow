@@ -1,9 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 import ListForm from "./ListForm";
 import ListItem from "./ListItem";
 import { Card, List } from "@prisma/client";
+import { useAction } from "@/hooks/use-action";
+import { updateListOrder } from "@/actions/updateListOrder";
+import { updateCardOrder } from "@/actions/updateCardOrder";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 
 type ListProps = List & {
@@ -27,6 +31,24 @@ function reorder<T>(list: T[], startIndex: number, endIndex: number) {
 
 const ListContainer = ({ boardId, lists }: Props) => {
   const [orderedLists, setOrderedLists] = useState(lists);
+
+  const { execute: executeUpdateListOrder } = useAction(updateListOrder, {
+    onSuccess: () => {
+      toast.success("List Re-ordered");
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
+
+  const { execute: executeUpdateCardOrder } = useAction(updateCardOrder, {
+    onSuccess: () => {
+      toast.success("Card Re-ordered");
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
 
   const onDragEnd = (result: any) => {
     const { destination, source, type } = result;
@@ -52,6 +74,7 @@ const ListContainer = ({ boardId, lists }: Props) => {
       setOrderedLists(items);
 
       //Update backend
+      executeUpdateListOrder({ boardId, items });
     }
 
     // User moves a card on the same list and type is card
@@ -98,6 +121,7 @@ const ListContainer = ({ boardId, lists }: Props) => {
         setOrderedLists(newOrderedData);
 
         //Update backend
+        executeUpdateCardOrder({ boardId, items: reorderedCards });
       }
       // User moves the card to another list
       else {
@@ -122,6 +146,7 @@ const ListContainer = ({ boardId, lists }: Props) => {
         setOrderedLists(newOrderedData);
 
         //Update backend
+        executeUpdateCardOrder({ boardId, items: destinationList.cards });
       }
     }
   };
