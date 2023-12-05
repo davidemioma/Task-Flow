@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Header } from "./Header";
+import { Actions } from "./Actions";
 import { fetcher } from "@/lib/utils";
 import { Description } from "./Description";
 import { Card, List } from "@prisma/client";
@@ -37,7 +38,7 @@ const CardModal = () => {
             </div>
           </div>
 
-          <div></div>
+          {cardData ? <Actions data={cardData} /> : <Actions.Skeleton />}
         </div>
       </DialogContent>
     </Dialog>
