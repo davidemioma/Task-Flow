@@ -1,9 +1,12 @@
 "use client";
 
 import React, { ElementRef, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Layout } from "lucide-react";
 import { Card, List } from "@prisma/client";
 import { useParams } from "next/navigation";
+import { useAction } from "@/hooks/use-action";
+import { updateCard } from "@/actions/updateCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQueryClient } from "@tanstack/react-query";
 import { FormInput } from "@/components/form/FormInput";
@@ -25,12 +28,33 @@ export const Header = ({ data }: { data: CardData }) => {
     inputRef.current?.form?.requestSubmit();
   };
 
+  const { execute } = useAction(updateCard, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["card", data.id],
+      });
+
+      toast.success(`Renamed to "${data.title}"`);
+
+      setTitle(data.title);
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
+
   const onSubmit = (formData: FormData) => {
     const boardId = params.boardId as string;
 
     const title = formData.get("title") as string;
 
     if (title === data.title) return;
+
+    execute({
+      id: data.id,
+      boardId,
+      title,
+    });
   };
 
   return (
