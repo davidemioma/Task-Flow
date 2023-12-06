@@ -57,6 +57,10 @@ export const Description = ({ data }: { data: CardData }) => {
         queryKey: ["card", data.id],
       });
 
+      queryClient.invalidateQueries({
+        queryKey: ["card-logs", data.id],
+      });
+
       toast.success(`Card "${data.title}" updated`);
 
       disableEditing();

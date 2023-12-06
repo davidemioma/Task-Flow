@@ -34,6 +34,10 @@ export const Header = ({ data }: { data: CardData }) => {
         queryKey: ["card", data.id],
       });
 
+      queryClient.invalidateQueries({
+        queryKey: ["card-logs", data.id],
+      });
+
       toast.success(`Renamed to "${data.title}"`);
 
       setTitle(data.title);
