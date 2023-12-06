@@ -9,6 +9,7 @@ import FormPicker from "./FormPicker";
 import { FormInput } from "./FormInput";
 import { useRouter } from "next/navigation";
 import { useAction } from "@/hooks/use-action";
+import useProModel from "@/hooks/use-pro-model";
 import { createBoard } from "@/actions/createBoard";
 import {
   Popover,
@@ -32,6 +33,8 @@ const FormPopover = ({
 }: Props) => {
   const router = useRouter();
 
+  const proModal = useProModel();
+
   const closeRef = useRef<ElementRef<"button">>(null);
 
   const { execute, fieldErrors } = useAction(createBoard, {
@@ -45,7 +48,7 @@ const FormPopover = ({
     onError: (error) => {
       toast.error(error);
 
-      console.log({ error });
+      proModal.onOpen();
     },
   });
 

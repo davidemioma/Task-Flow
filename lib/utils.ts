@@ -12,3 +12,7 @@ export const fetcher = async (url: string) => {
 };
 
 export const MAX_FREE_BOARDS = 5;
+
+export const getAbsoluteUrl = (path: string) => {
+  return `${process.env.NEXT_PUBLIC_APP_URL}${path}`;
+};
