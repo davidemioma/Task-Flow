@@ -5,7 +5,9 @@ import prismadb from "@/lib/prismadb";
 import { DeleteList } from "./schema";
 import { revalidatePath } from "next/cache";
 import { InputType, ReturnType } from "./types";
+import { ACTION, ENTITY_TYPE } from "@prisma/client";
 import { createSafeAction } from "@/lib/create-safe-action";
+import { createActivityLog } from "@/lib/create-activity-log";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth();
@@ -27,6 +29,13 @@ const handler = async (data: InputType): Promise<ReturnType> => {
           orgId,
         },
       },
+    });
+
+    await createActivityLog({
+      action: ACTION.DELETE,
+      entityId: list.id,
+      entityType: ENTITY_TYPE.LIST,
+      entityTitle: list.title,
     });
   } catch (err) {
     return { error: "Failed to delete list." };
