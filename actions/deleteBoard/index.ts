@@ -10,6 +10,7 @@ import { ACTION, ENTITY_TYPE } from "@prisma/client";
 import { decrementAvailableCount } from "@/lib/org-limit";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { createActivityLog } from "@/lib/create-activity-log";
+import { checkSubscription } from "@/lib/check-subscription";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth();
@@ -19,6 +20,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   }
 
   const { id } = data;
+
+  const isPro = await checkSubscription();
 
   let board;
 
@@ -41,7 +44,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       },
     });
 
-    await decrementAvailableCount();
+    if (!isPro) {
+      await decrementAvailableCount();
+    }
 
     await createActivityLog({
       action: ACTION.DELETE,

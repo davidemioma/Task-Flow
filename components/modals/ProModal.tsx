@@ -47,6 +47,14 @@ const ProModal = () => {
             <li>And more!</li>
           </ul>
 
+          <ul className="pl-3 text-sm list-disc">
+            <li>Card Number: 4242 4242 4242 4242</li>
+
+            <li>Expiry Date: 04/24</li>
+
+            <li>CVV: 242</li>
+          </ul>
+
           <Button
             className="w-full"
             variant="primary"

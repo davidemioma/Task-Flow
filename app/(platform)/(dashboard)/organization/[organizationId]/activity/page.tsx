@@ -5,6 +5,7 @@ import { Info } from "../_components/Info";
 import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { ActivityList } from "./_components/ActivityList";
+import { checkSubscription } from "@/lib/check-subscription";
 
 export default async function ActivityPage() {
   const { orgId } = auth();
@@ -12,6 +13,8 @@ export default async function ActivityPage() {
   if (!orgId) {
     redirect("/select-org");
   }
+
+  const isPro = await checkSubscription();
 
   const activityLogs = await prismadb.activityLog.findMany({
     where: {
@@ -24,7 +27,7 @@ export default async function ActivityPage() {
 
   return (
     <div className="w-full">
-      <Info />
+      <Info isPro={isPro} />
 
       <Separator className="my-2" />
 

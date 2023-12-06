@@ -2,11 +2,14 @@ import { Suspense } from "react";
 import { Info } from "./_components/Info";
 import { BoardList } from "./_components/BoardList";
 import { Separator } from "@/components/ui/separator";
+import { checkSubscription } from "@/lib/check-subscription";
 
-export default function OrganizationPage() {
+export default async function OrganizationPage() {
+  const isPro = await checkSubscription();
+
   return (
     <div className="w-full mb-20">
-      <Info />
+      <Info isPro={isPro} />
 
       <Separator className="my-4" />
 
