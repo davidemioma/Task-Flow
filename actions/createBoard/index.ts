@@ -8,12 +8,22 @@ import { InputType, ReturnType } from "./types";
 import { ACTION, ENTITY_TYPE } from "@prisma/client";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { createActivityLog } from "@/lib/create-activity-log";
+import { incrementAvailableCount, hasAvailableCount } from "@/lib/org-limit";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth();
 
   if (!userId || !orgId) {
     return { error: "Unauthorized" };
+  }
+
+  const canCreate = await hasAvailableCount();
+
+  if (!canCreate) {
+    return {
+      error:
+        "You have reached your limit of free board. Upgrade to create more.",
+    };
   }
 
   const { title, image } = data;
@@ -48,6 +58,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       },
     });
 
+    await incrementAvailableCount();
+
     await createActivityLog({
       action: ACTION.CREATE,
       entityId: board.id,
@@ -55,6 +67,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       entityTitle: board.title,
     });
   } catch (err) {
+    console.log(err);
     return { error: "Failed to create." };
   }
 

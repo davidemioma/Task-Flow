@@ -10,3 +10,5 @@ export const fetcher = async (url: string) => {
 
   return res.json();
 };
+
+export const MAX_FREE_BOARDS = 5;

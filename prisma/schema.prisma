@@ -31,7 +31,7 @@ enum ENTITY_TYPE {
 
 model Board{
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  orgId String @unique
+  orgId String
   title String
   imageId String
   imageThumbUrl String @db.String
